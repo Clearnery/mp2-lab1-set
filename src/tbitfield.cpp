@@ -131,21 +131,29 @@ int TBitField::GetBit(const int n) const // получить значение б
 
 TBitField& TBitField::operator=(const TBitField &bf) // присваивание
 {
-    if (*this != bf)
-    {
-        MemLen = bf.MemLen;
-        BitLen = bf.BitLen;
-        delete[] pMem;
-        pMem = new int[MemLen];
-        for (int i = 0; i < MemLen; i++)
-        {
-            pMem[i] = bf.pMem[i];
-        }
-    }
-    else
+    // ПРАВИЛЬНАЯ проверка на самоприсваивание
+    if (this == &bf) 
     {
         return *this;
     }
+    
+    // Освобождаем старую память
+    delete[] pMem;
+    
+    // Копируем размеры из правого операнда
+    BitLen = bf.BitLen;
+    MemLen = bf.MemLen;
+    
+    // Выделяем новую память нужного размера
+    pMem = new int[MemLen];
+    
+    // Копируем данные
+    for (int i = 0; i < MemLen; i++) 
+    {
+        pMem[i] = bf.pMem[i];
+    }
+    
+    return *this;  // Не забываем вернуть *this
 }
 
 int TBitField::operator==(const TBitField &bf) const // сравнение
